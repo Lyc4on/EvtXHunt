@@ -2,42 +2,10 @@
 # the command line version of the Export_EVTX program.  A sqlite database that
 # contains the Event Log information is created then imported into the extracted
 # view section of Autopsy.
-#
-# Contact: Mark McKinnon [Mark [dot] McKinnon <at> Davenport [dot] edu]
-#
-# This is free and unencumbered software released into the public domain.
-#
-# Anyone is free to copy, modify, publish, use, compile, sell, or
-# distribute this software, either in source code form or as a compiled
-# binary, for any purpose, commercial or non-commercial, and by any
-# means.
-#
-# In jurisdictions that recognize copyright laws, the author or authors
-# of this software dedicate any and all copyright interest in the
-# software to the public domain. We make this dedication for the benefit
-# of the public at large and to the detriment of our heirs and
-# successors. We intend this dedication to be an overt act of
-# relinquishment in perpetuity of all present and future rights to this
-# software under copyright law.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
 
 # Event Log module to parse the Windows Event Logs.
-# March 2016
-# 
 # Comments 
-#   Version 1.0 - Initial version - March 2016
-#   Version 1.1 - Add custom artifact/attributes - August 28th 2016
-#   version 1.2 - Add check to see if any event logs were selected, if not error out gracefully and submit message.
-#   version 1.3 - Add Long Tail Extracted view and change event log identifier to long value type
-#   version 1.4 - add support for Linux
-#   Version 1.5 - FIx option Panel
+#   Version 1.0 - Filter to only get Event ID 4624
 
 import jarray
 import inspect
@@ -406,13 +374,6 @@ class ParseEvtxDbIngestModule(DataSourceIngestModule):
                                         (BlackboardAttribute(attID_ev_usi, ParseEvtxDbIngestModuleFactory.moduleName, Event_User_Security_Identifier)), \
                                         (BlackboardAttribute(attID_ev_et, ParseEvtxDbIngestModuleFactory.moduleName, Event_Time)), \
                                         (BlackboardAttribute(attID_ev_dt, ParseEvtxDbIngestModuleFactory.moduleName, Event_Detail_Text))))
-                        # These attributes may also be added in the future
-                        #art.addAttribute(BlackboardAttribute(attID_ev_fn, ParseEvtxDbIngestModuleFactory.moduleName, File_Name))
-                        #art.addAttribute(BlackboardAttribute(attID_ev_rc, ParseEvtxDbIngestModuleFactory.moduleName, Recovered_Record))
-                        #art.addAttribute(BlackboardAttribute(attID_ev_eiq, ParseEvtxDbIngestModuleFactory.moduleName, Event_Identifier_Qualifiers))
-                        #art.addAttribute(BlackboardAttribute(attID_ev_oif, ParseEvtxDbIngestModuleFactory.moduleName, Event_Offset))
-                        #art.addAttribute(BlackboardAttribute(attID_ev_id, ParseEvtxDbIngestModuleFactory.moduleName, Identifier))
-                        #art.addAttribute(BlackboardAttribute(attID_ev_ete, ParseEvtxDbIngestModuleFactory.moduleName, Event_Time_Epoch))
 
                 try:
                     stmt_1 = dbConn.createStatement()
@@ -570,5 +531,3 @@ class Process_EVTX1WithUISettingsPanel(IngestModuleIngestJobSettingsPanel):
     # Return the settings used
     def getSettings(self):
         return self.local_settings
-
- 
