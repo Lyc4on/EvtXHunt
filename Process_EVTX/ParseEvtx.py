@@ -1,16 +1,18 @@
 # This python autopsy module will export the Windows Event Logs and then call
 # the command line version of the Export_EVTX program.  A sqlite database that
 # contains the Event Log information is created then imported into the extracted
-# view section of Autopsy.
+# view section of Autopsy. Only security-related logs will be shown.
 
 # Event Log module to parse the Windows Event Logs.
 # Comments 
-#   Version 1.0 - Right now the script is only able to extract out all .evtx files into a temp folder 
+#   Version 1.0 - Right now the script is only able to extract out all .evtx files into a temp folder. Played around with UI.
+
 
 import jarray
 import inspect
 import os
 import subprocess
+# import pyevtx
 
 from javax.swing import JCheckBox
 from javax.swing import JList
@@ -135,11 +137,11 @@ class ParseEvtxDbIngestModule(DataSourceIngestModule):
                 self.List_Of_Events.append('Security.Evtx')
             if self.local_settings.getSetting('System') == 'true':
                 self.List_Of_Events.append('System.Evtx')
-            if self.local_settings.getSetting('Other') == 'true':
-                self.List_Of_Events.append('Other')
-                Event_List = self.local_settings.getSetting('EventLogs').split()
-                for evt in Event_List:
-                   self.List_Of_Events.append(str(evt))
+            # if self.local_settings.getSetting('Other') == 'true':
+            #     self.List_Of_Events.append('Other')
+            #     Event_List = self.local_settings.getSetting('EventLogs').split()
+            #     for evt in Event_List:
+            #        self.List_Of_Events.append(str(evt))
              
         # Throw an IngestModule.IngestModuleException exception if there was a problem setting up
         # raise IngestModuleException(IngestModule(), "Oh No!")
@@ -300,7 +302,13 @@ class ParseEvtxDbIngestModule(DataSourceIngestModule):
                 lclDbPath = os.path.join(temp_dir, file.getName())
                 ContentUtils.writeToFile(file, File(lclDbPath))
             
-            
+                #if file.getName() == "Security.evtx":
+                    # completeName = os.path.join(temp_dir, "test.txt")         
+                    # file1 = open(completeName, "w")
+                    # file1.write("Found security.evtx")
+                    # file1.close()
+
+
 
             # # Run the EXE, saving output to a sqlite database
             # self.log(Level.INFO, "Running program on data source " + self.path_to_exe + " parm 1 ==> " + temp_dir + "  Parm 2 ==> " + os.path.join(temp_dir, "EventLogs.db3"))
@@ -483,14 +491,14 @@ class Process_EVTX1WithUISettingsPanel(IngestModuleIngestJobSettingsPanel):
             self.local_settings.setSetting('System', 'true')
         else:
             self.local_settings.setSetting('System', 'false')
-        if self.checkbox4.isSelected():
-            self.local_settings.setSetting('Other', 'true')
-            self.local_settings.setSetting('EventLogs', self.area.getText())
-        else:
-            self.local_settings.setSetting('Other', 'false')
+        # if self.checkbox4.isSelected():
+        #     self.local_settings.setSetting('Other', 'true')
+        #     self.local_settings.setSetting('EventLogs', self.area.getText())
+        # else:
+        #     self.local_settings.setSetting('Other', 'false')
 
-    def keyPressed(self, event):
-        self.local_settings.setSetting('EventLogs', self.area.getText())
+    # def keyPressed(self, event):
+    #     self.local_settings.setSetting('EventLogs', self.area.getText())
 
     # TODO: Update this for your UI
     def initComponents(self):
@@ -504,22 +512,22 @@ class Process_EVTX1WithUISettingsPanel(IngestModuleIngestJobSettingsPanel):
         self.checkbox1 = JCheckBox("Application.Evtx", actionPerformed=self.checkBoxEvent)
         self.checkbox2 = JCheckBox("Security.EVTX", actionPerformed=self.checkBoxEvent)
         self.checkbox3 = JCheckBox("System.EVTX", actionPerformed=self.checkBoxEvent)
-        self.checkbox4 = JCheckBox("Other - Input in text area below then check this box", actionPerformed=self.checkBoxEvent)
+        # self.checkbox4 = JCheckBox("Other - Input in text area below then check this box", actionPerformed=self.checkBoxEvent)
         self.panel1.add(self.checkbox)
         self.panel1.add(self.checkbox1)
         self.panel1.add(self.checkbox2)
         self.panel1.add(self.checkbox3)
-        self.panel1.add(self.checkbox4)
+        # self.panel1.add(self.checkbox4)
         self.add(self.panel1)
 		
-        self.area = JTextArea(5,25)
-        #self.area.addKeyListener(self)
-        self.area.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
-        self.pane = JScrollPane()
-        self.pane.getViewport().add(self.area)
+        # self.area = JTextArea(5,25)
+        # #self.area.addKeyListener(self)
+        # self.area.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+        # self.pane = JScrollPane()
+        # self.pane.getViewport().add(self.area)
         #self.pane.addKeyListener(self)
         #self.add(self.area)
-        self.add(self.pane)
+        # self.add(self.pane)
 		
     # TODO: Update this for your UI
     def customizeComponents(self):
@@ -527,8 +535,8 @@ class Process_EVTX1WithUISettingsPanel(IngestModuleIngestJobSettingsPanel):
         self.checkbox1.setSelected(self.local_settings.getSetting('Application') == 'true')
         self.checkbox2.setSelected(self.local_settings.getSetting('Security') == 'true')
         self.checkbox3.setSelected(self.local_settings.getSetting('System') == 'true')
-        self.checkbox4.setSelected(self.local_settings.getSetting('Other') == 'true')
-        self.area.setText(self.local_settings.getSetting('EventLogs'))
+        # self.checkbox4.setSelected(self.local_settings.getSetting('Other') == 'true')
+        # self.area.setText(self.local_settings.getSetting('EventLogs'))
 
     # Return the settings used
     def getSettings(self):
