@@ -1,43 +1,5 @@
-# This python autopsy module will export the Windows Event Logs and then call
-# the command line version of the Export_EVTX program.  A sqlite database that
-# contains the Event Log information is created then imported into the extracted
-# view section of Autopsy.
-#
-# Contact: Mark McKinnon [Mark [dot] McKinnon <at> Davenport [dot] edu]
-#
-# This is free and unencumbered software released into the public domain.
-#
-# Anyone is free to copy, modify, publish, use, compile, sell, or
-# distribute this software, either in source code form or as a compiled
-# binary, for any purpose, commercial or non-commercial, and by any
-# means.
-#
-# In jurisdictions that recognize copyright laws, the author or authors
-# of this software dedicate any and all copyright interest in the
-# software to the public domain. We make this dedication for the benefit
-# of the public at large and to the detriment of our heirs and
-# successors. We intend this dedication to be an overt act of
-# relinquishment in perpetuity of all present and future rights to this
-# software under copyright law.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
-
-# Event Log module to parse the Windows Event Logs.
-# March 2016
-# 
-# Comments 
-#   Version 1.0 - Initial version - March 2016
-#   Version 1.1 - Add custom artifact/attributes - August 28th 2016
-#   version 1.2 - Add check to see if any event logs were selected, if not error out gracefully and submit message.
-#   version 1.3 - Add Long Tail Extracted view and change event log identifier to long value type
-#   version 1.4 - add support for Linux
-#   Version 1.5 - FIx option Panel
+# This python autopsy module will export Security.evtx and then call
+# the Export_EVTX program.
 
 import jarray
 import inspect
@@ -93,17 +55,17 @@ class ParseEvtxDbIngestModuleFactory(IngestModuleFactoryAdapter):
     def __init__(self):
         self.settings = None
 
-    moduleName = "ParseEvtx"
+    moduleName = "ParseSecurityEvtx"
     
     def getModuleDisplayName(self):
         return self.moduleName
     
     def getModuleDescription(self):
-        return "Parses EVTX files"
+        return "Parses Security.evtx"
     
     
     def getModuleVersionNumber(self):
-        return "1.5"
+        return "1.0"
     
     def getDefaultIngestJobSettings(self):
         return GenericIngestModuleJobSettings()
@@ -165,153 +127,153 @@ class ParseEvtxDbIngestModule(DataSourceIngestModule):
     # See: http://sleuthkit.org/autopsy/docs/api-docs/3.1/classorg_1_1sleuthkit_1_1autopsy_1_1ingest_1_1_data_source_ingest_module_progress.html
     def process(self, dataSource, progressBar):
 
-        #Check to see if event logs were selected, if not then send message and error out else process events selected
-        #self.log(Level.INFO, "List Of Events ==> " + str(self.List_Of_Events) + " <== Number of Events ==> " + str(len(self.List_Of_Events)))
-        if len(self.List_Of_Events) < 1:
-            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, "ParseEvtx", " No Event Logs Selected to Parse " )
-            IngestServices.getInstance().postMessage(message)
-            return IngestModule.ProcessResult.ERROR
-        else:
+        # #Check to see if event logs were selected, if not then send message and error out else process events selected
+        # #self.log(Level.INFO, "List Of Events ==> " + str(self.List_Of_Events) + " <== Number of Events ==> " + str(len(self.List_Of_Events)))
+        # if len(self.List_Of_Events) < 1:
+        #     message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, "ParseEvtx", " No Event Logs Selected to Parse " )
+        #     IngestServices.getInstance().postMessage(message)
+        #     return IngestModule.ProcessResult.ERROR
+        # else:
             # Check to see if the artifacts exist and if not then create it, also check to see if the attributes
             # exist and if not then create them
-            skCase = Case.getCurrentCase().getSleuthkitCase();
-            skCase_Tran = skCase.beginTransaction()
-            try:
-                 self.log(Level.INFO, "Begin Create New Artifacts")
-                 artID_evtx = skCase.addArtifactType( "TSK_EVTX_LOGS", "Windows Event Logs")
-            except:		
-                 self.log(Level.INFO, "Artifacts Creation Error, some artifacts may not exist now. ==> ")
-                 artID_evtx = skCase.getArtifactTypeID("TSK_EVTX_LOGS")
-     
-            try:
-                 self.log(Level.INFO, "Begin Create New Artifacts")
-                 artID_evtx_Long = skCase.addArtifactType( "TSK_EVTX_LOGS_LONG", "Windows Event Logs Long Tail Analysis")
-            except:		
-                 self.log(Level.INFO, "Artifacts Creation Error, some artifacts may not exist now. ==> ")
-                 artID_evtx_Long = skCase.getArtifactTypeID("TSK_EVTX_LOGS")
-
-            try:
-                attID_ev_fn = skCase.addArtifactAttributeType("TSK_EVTX_FILE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Log File Name")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Log File Name. ==> ")
-            try:
-                attID_ev_rc = skCase.addArtifactAttributeType("TSK_EVTX_RECOVERED_RECORD", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Recovered Record")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Recovered Record. ==> ")
-            try:
-                attID_ev_cn = skCase.addArtifactAttributeType("TSK_EVTX_COMPUTER_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Computer Name")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Computer Name. ==> ")
-            try:
-                attID_ev_ei = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Identiifier")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Log File Name. ==> ")
-            try:
-                attID_ev_eiq = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Identifier Qualifiers")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Identifier Qualifiers. ==> ")
-            try:
-                attID_ev_el = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_LEVEL", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Level")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Level. ==> ")
-            try:
-                attID_ev_oif = skCase.addArtifactAttributeType("TSK_EVTX_OFFSET_IN_FILE", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Offset In File")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Offset In File. ==> ")
-            try:
-                attID_ev_id = skCase.addArtifactAttributeType("TSK_EVTX_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Identifier")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Identifier. ==> ")
-            try:
-                attID_ev_sn = skCase.addArtifactAttributeType("TSK_EVTX_SOURCE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Source Name")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Source Name. ==> ")
-            try:
-                attID_ev_usi = skCase.addArtifactAttributeType("TSK_EVTX_USER_SECURITY_ID", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "User Security ID")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, User Security ID. ==> ")
-            try:
-                attID_ev_et = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Time. ==> ")
-            try:
-                attID_ev_ete = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME_EPOCH", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time Epoch")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Identifier. ==> ")
-            try:
-                attID_ev_dt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Detail")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event Detail. ==> ")
-
-            try:
-                attID_ev_cnt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_ID_COUNT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Id Count")
-            except:		
-                 self.log(Level.INFO, "Attributes Creation Error, Event ID Count. ==> ")
-                 
-            #self.log(Level.INFO, "Get Artifacts after they were created.")
-            # Get the new artifacts and attributes that were just created
+        skCase = Case.getCurrentCase().getSleuthkitCase();
+        skCase_Tran = skCase.beginTransaction()
+        try:
+            self.log(Level.INFO, "Begin Create New Artifacts")
+            artID_evtx = skCase.addArtifactType( "TSK_EVTX_LOGS", "Windows Event Logs")
+        except:		
+            self.log(Level.INFO, "Artifacts Creation Error, some artifacts may not exist now. ==> ")
             artID_evtx = skCase.getArtifactTypeID("TSK_EVTX_LOGS")
-            artID_evtx_evt = skCase.getArtifactType("TSK_EVTX_LOGS")
-            artID_evtx_Long = skCase.getArtifactTypeID("TSK_EVTX_LOGS_LONG")
-            artID_evtx_Long_evt = skCase.getArtifactType("TSK_EVTX_LOGS_LONG")
-            attID_ev_fn = skCase.getAttributeType("TSK_EVTX_FILE_NAME")
-            attID_ev_rc = skCase.getAttributeType("TSK_EVTX_RECOVERED_RECORD")			 
-            attID_ev_cn = skCase.getAttributeType("TSK_EVTX_COMPUTER_NAME")			 
-            attID_ev_ei = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER")
-            attID_ev_eiq = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS")
-            attID_ev_el = skCase.getAttributeType("TSK_EVTX_EVENT_LEVEL")
-            attID_ev_oif = skCase.getAttributeType("TSK_EVTX_OFFSET_IN_FILE")
-            attID_ev_id = skCase.getAttributeType("TSK_EVTX_IDENTIFIER")
-            attID_ev_sn = skCase.getAttributeType("TSK_EVTX_SOURCE_NAME")
-            attID_ev_usi = skCase.getAttributeType("TSK_EVTX_USER_SECURITY_ID")
-            attID_ev_et = skCase.getAttributeType("TSK_EVTX_EVENT_TIME")
-            attID_ev_ete = skCase.getAttributeType("TSK_EVTX_EVENT_TIME_EPOCH")
-            attID_ev_dt = skCase.getAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT")
-            attID_ev_cnt = skCase.getAttributeType("TSK_EVTX_EVENT_ID_COUNT")
+     
+        try:
+            self.log(Level.INFO, "Begin Create New Artifacts")
+            artID_evtx_Long = skCase.addArtifactType( "TSK_EVTX_LOGS_LONG", "Windows Event Logs Long Tail Analysis")
+        except:		
+            self.log(Level.INFO, "Artifacts Creation Error, some artifacts may not exist now. ==> ")
+            artID_evtx_Long = skCase.getArtifactTypeID("TSK_EVTX_LOGS")
+
+        try:
+            attID_ev_fn = skCase.addArtifactAttributeType("TSK_EVTX_FILE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Log File Name")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Log File Name. ==> ")
+        try:
+            attID_ev_rc = skCase.addArtifactAttributeType("TSK_EVTX_RECOVERED_RECORD", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Recovered Record")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Recovered Record. ==> ")
+        try:
+            attID_ev_cn = skCase.addArtifactAttributeType("TSK_EVTX_COMPUTER_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Computer Name")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Computer Name. ==> ")
+        try:
+            attID_ev_ei = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Identiifier")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Log File Name. ==> ")
+        try:
+            attID_ev_eiq = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Identifier Qualifiers")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Identifier Qualifiers. ==> ")
+        try:
+            attID_ev_el = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_LEVEL", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Level")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Level. ==> ")
+        try:
+            attID_ev_oif = skCase.addArtifactAttributeType("TSK_EVTX_OFFSET_IN_FILE", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Offset In File")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Offset In File. ==> ")
+        try:
+            attID_ev_id = skCase.addArtifactAttributeType("TSK_EVTX_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Identifier")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Identifier. ==> ")
+        try:
+            attID_ev_sn = skCase.addArtifactAttributeType("TSK_EVTX_SOURCE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Source Name")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Source Name. ==> ")
+        try:
+            attID_ev_usi = skCase.addArtifactAttributeType("TSK_EVTX_USER_SECURITY_ID", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "User Security ID")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, User Security ID. ==> ")
+        try:
+            attID_ev_et = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Time. ==> ")
+        try:
+            attID_ev_ete = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME_EPOCH", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time Epoch")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Identifier. ==> ")
+        try:
+            attID_ev_dt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Detail")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event Detail. ==> ")
+
+        try:
+            attID_ev_cnt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_ID_COUNT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Id Count")
+        except:		
+            self.log(Level.INFO, "Attributes Creation Error, Event ID Count. ==> ")
+                 
+        #self.log(Level.INFO, "Get Artifacts after they were created.")
+        # Get the new artifacts and attributes that were just created
+        artID_evtx = skCase.getArtifactTypeID("TSK_EVTX_LOGS")
+        artID_evtx_evt = skCase.getArtifactType("TSK_EVTX_LOGS")
+        artID_evtx_Long = skCase.getArtifactTypeID("TSK_EVTX_LOGS_LONG")
+        artID_evtx_Long_evt = skCase.getArtifactType("TSK_EVTX_LOGS_LONG")
+        attID_ev_fn = skCase.getAttributeType("TSK_EVTX_FILE_NAME")
+        attID_ev_rc = skCase.getAttributeType("TSK_EVTX_RECOVERED_RECORD")			 
+        attID_ev_cn = skCase.getAttributeType("TSK_EVTX_COMPUTER_NAME")			 
+        attID_ev_ei = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER")
+        attID_ev_eiq = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS")
+        attID_ev_el = skCase.getAttributeType("TSK_EVTX_EVENT_LEVEL")
+        attID_ev_oif = skCase.getAttributeType("TSK_EVTX_OFFSET_IN_FILE")
+        attID_ev_id = skCase.getAttributeType("TSK_EVTX_IDENTIFIER")
+        attID_ev_sn = skCase.getAttributeType("TSK_EVTX_SOURCE_NAME")
+        attID_ev_usi = skCase.getAttributeType("TSK_EVTX_USER_SECURITY_ID")
+        attID_ev_et = skCase.getAttributeType("TSK_EVTX_EVENT_TIME")
+        attID_ev_ete = skCase.getAttributeType("TSK_EVTX_EVENT_TIME_EPOCH")
+        attID_ev_dt = skCase.getAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT")
+        attID_ev_cnt = skCase.getAttributeType("TSK_EVTX_EVENT_ID_COUNT")
             
-            # we don't know how much work there is yet
-            progressBar.switchToIndeterminate()
+        # we don't know how much work there is yet
+        progressBar.switchToIndeterminate()
             
-            # Find the Windows Event Log Files
-            files = []		
-            fileManager = Case.getCurrentCase().getServices().getFileManager()
-            # if self.List_Of_Events[0] == 'ALL':
-            #    files = fileManager.findFiles(dataSource, "Security.evtx")
-            # else:
-            for eventlog in self.List_Of_Events:
-                file_name = fileManager.findFiles(dataSource, "Security.evtx")
-                files.extend(file_name)
-                   #self.log(Level.INFO, "found " + str(file_name) + " files")
-            #self.log(Level.INFO, "found " + str(files) + " files")
+        # Find the Windows Event Log Files
+        files = []		
+        fileManager = Case.getCurrentCase().getServices().getFileManager()
+        # if self.List_Of_Events[0] == 'ALL':
+        #    files = fileManager.findFiles(dataSource, "Security.evtx")
+        # else:
+        for eventlog in self.List_Of_Events:
+            file_name = fileManager.findFiles(dataSource, "Security.evtx")
+            files.extend(file_name)
+                #self.log(Level.INFO, "found " + str(file_name) + " files")
+        #self.log(Level.INFO, "found " + str(files) + " files")
 
             
-            numFiles = len(files)
-            self.log(Level.INFO, "found " + str(numFiles) + " files")
-            progressBar.switchToDeterminate(numFiles)
-            fileCount = 0;
+        numFiles = len(files)
+        self.log(Level.INFO, "found " + str(numFiles) + " files")
+        progressBar.switchToDeterminate(numFiles)
+        fileCount = 0;
             
-            # Create Event Log directory in temp directory, if it exists then continue on processing		
-            Temp_Dir = Case.getCurrentCase().getTempDirectory()
-            self.log(Level.INFO, "create Directory " + Temp_Dir)
-            temp_dir = os.path.join(Temp_Dir, "EventLogs")
-            try:
-                os.mkdir(temp_dir)
-            except:
-                self.log(Level.INFO, "Event Log Directory already exists " + temp_dir)
+        # Create Event Log directory in temp directory, if it exists then continue on processing		
+        Temp_Dir = Case.getCurrentCase().getTempDirectory()
+        self.log(Level.INFO, "create Directory " + Temp_Dir)
+        temp_dir = os.path.join(Temp_Dir, "EventLogs")
+        try:
+            os.mkdir(temp_dir)
+        except:
+            self.log(Level.INFO, "Event Log Directory already exists " + temp_dir)
                 
-            # Write out each Event Log file to the temp directory
-            for file in files:
+        # Write out each Event Log file to the temp directory
+        for file in files:
                 
-                # Check if the user pressed cancel while we were busy
-                if self.context.isJobCancelled():
-                    return IngestModule.ProcessResult.OK
+            # Check if the user pressed cancel while we were busy
+            if self.context.isJobCancelled():
+                return IngestModule.ProcessResult.OK
 
-                #self.log(Level.INFO, "Processing file: " + file.getName())
-                fileCount += 1
+            #self.log(Level.INFO, "Processing file: " + file.getName())
+            fileCount += 1
 
-                # Save the DB locally in the temp folder. use file id as name to reduce collisions
-                lclDbPath = os.path.join(temp_dir, file.getName())
-                ContentUtils.writeToFile(file, File(lclDbPath))
+            # Save the DB locally in the temp folder. use file id as name to reduce collisions
+            lclDbPath = os.path.join(temp_dir, file.getName())
+            ContentUtils.writeToFile(file, File(lclDbPath))
                             
             # # Run the EXE, saving output to a sqlite database
             # self.log(Level.INFO, "Running program on data source " + self.path_to_exe + " parm 1 ==> " + temp_dir + "  Parm 2 ==> " + os.path.join(temp_dir, "EventLogs.db3"))
@@ -460,7 +422,7 @@ class ParseEvtxDbIngestModule(DataSourceIngestModule):
             # IngestServices.getInstance().fireModuleDataEvent(
             #     ModuleDataEvent(ParseEvtxDbIngestModuleFactory.moduleName, artID_evtx_evt, None))
             
-            return IngestModule.ProcessResult.OK
+        return IngestModule.ProcessResult.OK
 		
 # UI that is shown to user for each ingest job so they can configure the job.
 # TODO: Rename this
