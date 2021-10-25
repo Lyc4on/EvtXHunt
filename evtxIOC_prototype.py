@@ -20,11 +20,8 @@ if __name__ == "__main__":
         for record in log.records():
             row =[]
             soup = BeautifulSoup(record.xml(), 'xml')
-            row.extend([soup.Event.name,soup.EventID.string,soup.Level.string,soup.TimeCreated['SystemTime'],soup.Computer.string,soup.Security['UserID'],soup.EventData.string])
-            writer.writerow(row)
-    
-    f.close()
-    
-
-
-        
+            if (soup.EventID.string == "4670"): print(soup)
+            if (soup.EventID.string == "4672"): print(soup)
+            if (soup.EventID.string == "1006"): print(soup)
+            if (soup.EventID.string == "1007"): print(soup)
+            if (soup.EventID.string == "11"): print(soup)
