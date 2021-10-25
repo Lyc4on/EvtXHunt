@@ -1,5 +1,5 @@
 # This python autopsy module will export Security.evtx and then call
-# the Export_EVTX program.
+# the evtxIOC_prototypev3 program.
 
 import jarray
 import inspect
