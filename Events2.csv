@@ -1,0 +1,4 @@
+Event Name,EventID,Level,Time,Computer Name,User ID,Event Data
+Microsoft-Windows-Eventlog,1102,4,2019-11-15 08:19:16.102509,alice.insecurebank.local,,1,,1,S-1-5-21-1005675359-741490361-30848483-1108,bob,insecurebank,0x0000000001c363a4
+Microsoft-Windows-Security-Auditing,4624,0,2019-11-15 08:19:17.134469,alice.insecurebank.local,,2,,2,S-1-0-0,-,-,0x0000000000000000,S-1-5-7,ANONYMOUS LOGON,NT AUTHORITY,0x0000000001d12916,3,NtLmSsp ,NTLM,-,{00000000-0000-0000-0000-000000000000},-,NTLM V1,128,0x0000000000000000,-,127.0.0.1,59336,%%1833
+Microsoft-Windows-Security-Auditing,4634,0,1601-01-01 00:00:00,alice.insecurebank.local,,3,,3,S-1-5-7,ANONYMOUS LOGON,NT AUTHORITY,0x0000000001d12916,3

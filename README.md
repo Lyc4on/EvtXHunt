@@ -15,5 +15,5 @@ pyinstaller --onefile -w evtxIOC_prototypev3.py
 
 Test out .exe (to be refined)
 ```cmd
-evtxIOC_prototypev3.exe -f Sysmon_UACME_22.evtx
+python evtxIOC_prototypev3_sigma.py -f EfsPotato_sysmon_17_18_privesc_seimpersonate_to_system.evtx -r sysmon_efspotato_namedpipe.yml
 ```
