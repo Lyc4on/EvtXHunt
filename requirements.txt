@@ -1,9 +1,13 @@
+altgraph==0.17.2
 backports.functools-lru-cache==1.6.4
 beautifulsoup4==4.9.3
 configparser==4.0.2
+dis3==0.1.3
 hexdump==3.3
-lxml==4.6.3
+libevtx-python==20210525
 more-itertools==5.0.0
+pip-autoremove==0.10.0
+PyInstaller==3.6
 pyparsing==2.4.7
 python-evtx==0.7.4
 six==1.16.0
