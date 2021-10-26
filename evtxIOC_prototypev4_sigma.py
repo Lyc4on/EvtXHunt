@@ -42,56 +42,47 @@ if __name__ == "__main__":
     
     # Getting all fields in Evtx event entry
     for i in range(0, evtx_file.get_number_of_records()):
-        evtx_record = evtx_file.get_record(i)
+        # event Entry has 2 components: System and EventData
+        evtx_record = evtx_file.get_record(i) # evtx_record = event entry
         evtx_record = xmltodict.parse(evtx_record.get_xml_string())
-        provName = evtx_record['Event']['System']['Provider']['@Name']
-        provGUID = evtx_record['Event']['System']['Provider']['@Guid']
-        sysEventID = evtx_record['Event']['System']['EventID']
-        version = evtx_record['Event']['System']['Version']
-        level = evtx_record['Event']['System']['Level']
-        task = evtx_record['Event']['System']['Task']
-        opcode = evtx_record['Event']['System']['Opcode']
-        keywords = evtx_record['Event']['System']['Keywords']
-        timecreated = evtx_record['Event']['System']['TimeCreated']['@SystemTime']
-        eventRecID = evtx_record['Event']['System']['EventRecordID']
-        
-        if evtx_record['Event']['System']['Correlation'] != None:
-            if evtx_record['Event']['System']['Correlation'][0] != None:
-                cor_activityID = evtx_record['Event']['System']['Correlation'][0]
+
+        # Get all System's sub elements
+        systemData = {}
+        for i in range(0, len(evtx_record['Event']['System'].values())):
+            # Check if System[i] is a dict or just a single element
+            if isinstance(evtx_record['Event']['System'].values()[i], dict):
+                if len(evtx_record['Event']['System'].values()[i].values()) > 1:
+                    print(evtx_record['Event']['System'].values()[i].keys()[0])
+                    print(evtx_record['Event']['System'].values()[i].values()[0])
+                    print(evtx_record['Event']['System'].values()[i].keys()[1])
+                    print(evtx_record['Event']['System'].values()[i].values()[1])
+                else:
+                    print(evtx_record['Event']['System'].values()[i].keys()[0])
+                    print(evtx_record['Event']['System'].values()[i].values()[0])
             else:
-                cor_activityID = ""
+                print(evtx_record['Event']['System'].keys()[i])
+                print(evtx_record['Event']['System'].values()[i])
 
-            if evtx_record['Event']['System']['Correlation'][1] != None:
-                cor_relatedActID = evtx_record['Event']['System']['Correlation'][1]
-            else:
-                cor_relatedActID = ""
-        else:
-            cor_activityID = ""
-            cor_relatedActID = ""
+        # print(systemData)
+        print("\n")
 
-        exec_pid = evtx_record['Event']['System']['Execution']['@ProcessID']
-        exec_tid = evtx_record['Event']['System']['Execution']['@ThreadID']
-        
-        channel = evtx_record['Event']['System']['Channel']
-        computer = evtx_record['Event']['System']['Computer']
-        sec_uid = evtx_record['Event']['System']['Security']['@UserID']        
+        # Fix cmd output -> {u'4760': u'6844'} || JSON ->Execution : {@ProcessID: 4760, @ThreadID: 6844}
+        # print(evtx_record['Event']['System'].values()[10].keys()[0]) # Prints out @ProcessID
 
-        # Get all EventData.Data's elements, every event entry in evtx has diff len of EventData, hence a loop is used
-        data = {}
+        # Get all EventData's sub elements, every event entry in evtx has diff len of EventData, hence a loop is used
+        eventData = {}
         for i in range(0, len(evtx_record['Event']['EventData']['Data'])):
             key = evtx_record['Event']['EventData']['Data'][i].values()[0]
 
             # Check if evtx_record['Event']['EventData']['Data'][i].values() has @Name and #text
             if len(evtx_record['Event']['EventData']['Data'][i].values()) > 1:
                 val = evtx_record['Event']['EventData']['Data'][i].values()[1]
-                data[key] = val
+                eventData[key] = val
             else:
-                data[key] = ""
-        
-        print(data)
+                eventData[key] = ""
+        # print(eventData)
 
         # Colidate variables into a dictionary before inserting to datafrace
-
 
 
     # Parsing and normalizing yml data to json
