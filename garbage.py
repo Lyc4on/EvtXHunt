@@ -26,9 +26,8 @@ from org.sleuthkit.autopsy.coreutils import Logger
 from org.sleuthkit.autopsy.casemodule import Case
 from org.sleuthkit.autopsy.casemodule.services import Services
 from org.sleuthkit.autopsy.casemodule.services import FileManager
-
 from org.sleuthkit.autopsy.coreutils import PlatformUtil
-'''new import'''
+#new import
 from org.sleuthkit.autopsy.ingest import GenericIngestModuleJobSettings
 from org.sleuthkit.autopsy.ingest import IngestModuleIngestJobSettingsPanel
 #from org.sleuthkit.autopsy.datamodel import ContentUtils
@@ -37,7 +36,7 @@ from org.sleuthkit.autopsy.ingest import IngestModuleIngestJobSettingsPanel
 # Factory that defines the name and details of the module and allows Autopsy
 # to create instances of the modules that will do the anlaysis.
 # TODO: Rename this to something more specific.  Search and replace for it because it is used a few times
-class SampleJythonFileIngestModuleFactory(IngestModuleFactoryAdapter):
+class EvtxIOCAnalysisIngestModuleFactory(IngestModuleFactoryAdapter):
 
     # TODO: give it a unique name.  Will be shown in module list, logs, etc.
     moduleName = "EVTX Crap Module"
@@ -67,15 +66,15 @@ class SampleJythonFileIngestModuleFactory(IngestModuleFactoryAdapter):
     
     # can return null if isFileIngestModuleFactory returns false
     def createFileIngestModule(self, ingestOptions):
-        return SampleJythonFileIngestModule()
+        return EvtxIOCAnalysisIngestModule(self.settings)
 
 
 # File-level ingest module.  One gets created per thread.
 # TODO: Rename this to something more specific. Could just remove "Factory" from above name.
 # Looks at the attributes of the passed in file.
-class SampleJythonFileIngestModule(FileIngestModule):
+class EvtxIOCAnalysisIngestModule(FileIngestModule):
 
-    _logger = Logger.getLogger(SampleJythonFileIngestModuleFactory.moduleName)
+    _logger = Logger.getLogger(EvtxIOCAnalysisIngestModuleFactory.moduleName)
 
     def log(self, level, msg):
         self._logger.logp(level, self.__class__.__name__, inspect.stack()[1][3], msg)
@@ -92,9 +91,9 @@ class SampleJythonFileIngestModule(FileIngestModule):
              self.path_to_exe = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample.csv")
              self.log(Level.INFO, "File Exists me")
 
-             message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " I1Oa POS1" )
+             message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " I1Oa POS1" )
              ingestServices = IngestServices.getInstance().postMessage(message)
-        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " asdsad" )
+        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " asdsad" )
         ingestServices = IngestServices.getInstance().postMessage(message)
         #self.tempDir= "D:\SIT Year 2 Tri 1\2202 Digital Forensics\2203_Proj\trash.csv"
         #self.tempDir= unicode("D:\SIT Year 2 Tri 1\2202 Digital Forensics\2203_Proj\trash.csv", errors='ignore')
@@ -105,13 +104,13 @@ class SampleJythonFileIngestModule(FileIngestModule):
 
         #reader = csv.reader(open(self.path_to_exe))
         reader = csv.DictReader(open(self.path_to_exe))
-        for raw in reader:
-            self.log(Level.INFO, str(raw["EVTX Name"]))
+        for row in reader:
+            self.log(Level.INFO, str(row["EVTX Name"]))
 
-        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " asdsad" )
+        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " asdsad" )
         ingestServices = IngestServices.getInstance().postMessage(message)
         try:
-            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " I1O POS2" )
+            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " I1O POS2" )
             ingestServices = IngestServices.getInstance().postMessage(message)
             #self.tempDir= unicode("D:\SIT Year 2 Tri 1\2202 Digital Forensics\2203_Proj\trash.csv", errors='ignore')
             #self.tempDir= "D:\SIT Year 2 Tri 1\2202 Digital Forensics\2203_Proj\trash.csv"
@@ -120,17 +119,17 @@ class SampleJythonFileIngestModule(FileIngestModule):
             
             
             
-            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " I1O POS3" )
+            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " I1O POS3" )
             ingestServices = IngestServices.getInstance().postMessage(message)
             
-            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " IO POS4" )
+            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " IO POS4" )
             ingestServices = IngestServices.getInstance().postMessage(message)
             ##        raise IngestModuleException("Linux executable was not found in module folder")
         except IOError:
-            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " FOGs LA" )
+            message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " FOGs LA" )
             ingestServices = IngestServices.getInstance().postMessage(message)
 
-        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " FOG LA" )
+        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " FOG LA" )
         ingestServices = IngestServices.getInstance().postMessage(message)    
         # Throw an IngestModule.IngestModuleException exception if there was a problem setting up
         #raise IngestModuleException(IngestModule(), "Oh No!")
@@ -141,58 +140,191 @@ class SampleJythonFileIngestModule(FileIngestModule):
     # See: http://www.sleuthkit.org/sleuthkit/docs/jni-docs/classorg_1_1sleuthkit_1_1datamodel_1_1_abstract_file.html
     # TODO: Add your analysis code in here.
     def process(self, file):
-        #self.filen.write("AAAA")
+        skCase = Case.getCurrentCase().getSleuthkitCase();
+        skCase_Tran = skCase.beginTransaction()
+        try:
+            self.log(Level.INFO, "Creation of New Artifacts")
+            artID_evtx_ioc_summary = skCase.addArtifactType( "SUM_IOC_EVTX_LOGS", "IOCs Summary in Windows Event Logs")
+        except:		
+            self.log(Level.INFO, "Error in Artifacts Creation, some artifacts may be missing.")
+            artID_evtx_ioc_summary = skCase.getArtifactTypeID("SUM_IOC_EVTX_LOGS")
+        try:
+            self.log(Level.INFO, "Creation of New Artifacts")
+            artID_evtx_ioc_details = skCase.addArtifactType( "IOC_EVTX_LOGS", "Detailed Windows Event Logs")
+        except:		
+            self.log(Level.INFO, "Error in Artifacts Creation, some artifacts may be missing.")            
+            artID_evtx_ioc_details = skCase.getArtifactTypeID("IOC_EVTX_LOGS")
 
-        # Skip non-files
-        if ((file.getType() == TskData.TSK_DB_FILES_TYPE_ENUM.UNALLOC_BLOCKS) or 
-            (file.getType() == TskData.TSK_DB_FILES_TYPE_ENUM.UNUSED_BLOCKS) or 
-            (file.isFile() == False)):
-            return IngestModule.ProcessResult.OK
+        try:
+            attID_ev_fn = skCase.addArtifactAttributeType("EVTX_FILE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Log File Name")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Log File Name. == ")
+        try:
+            attID_ev_rc = skCase.addArtifactAttributeType("TSK_EVTX_RECOVERED_RECORD", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Recovered Record")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Recovered Record. == ")
+        try:
+            attID_ev_cn = skCase.addArtifactAttributeType("TSK_EVTX_COMPUTER_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Computer Name")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Computer Name. == ")
+        try:
+            attID_ev_ei = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Identiifier")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Log File Name. == ")
+        try:
+            attID_ev_eiq = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Identifier Qualifiers")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Identifier Qualifiers. == ")
+        try:
+            attID_ev_el = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_LEVEL", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Level")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Level. == ")
+        try:
+            attID_ev_oif = skCase.addArtifactAttributeType("TSK_EVTX_OFFSET_IN_FILE", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Offset In File")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Offset In File. == ")
+        try:
+            attID_ev_id = skCase.addArtifactAttributeType("TSK_EVTX_IDENTIFIER", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Identifier")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Identifier. == ")
+        try:
+            attID_ev_sn = skCase.addArtifactAttributeType("TSK_EVTX_SOURCE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Source Name")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Source Name. == ")
+        try:
+            attID_ev_usi = skCase.addArtifactAttributeType("TSK_EVTX_USER_SECURITY_ID", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "User Security ID")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - User Security ID. == ")
+        try:
+            attID_ev_et = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Time. == ")
+        try:
+            attID_ev_ete = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_TIME_EPOCH", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Time Epoch")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Identifier. == ")
+        try:
+            attID_ev_dt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Detail")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event Detail. == ")
 
-        # For an example, we will flag files with .txt in the name and make a blackboard artifact.
-        if file.getName().lower().endswith(".txt"):
+        try:
+            attID_ev_cnt = skCase.addArtifactAttributeType("TSK_EVTX_EVENT_ID_COUNT", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.LONG, "Event Id Count")
+        except:		
+                self.log(Level.INFO, "== Error in Attributes Creation - Event ID Count. == ")
+                
+        #self.log(Level.INFO, "Get Artifacts after they were created.")
+        # Get the new artifacts and attributes that were just created
+        artID_sum_ioc_evtx = skCase.getArtifactTypeID("SUM_IOC_EVTX_LOGS")
+        artID_sum_ioc_evtx_evt = skCase.getArtifactType("SUM_IOC_EVTX_LOGS")
+        artID_ioc_evtx = skCase.getArtifactTypeID("IOC_EVTX_LOGS")
+        artID__ioc_evtx_evt = skCase.getArtifactType("IOC_EVTX_LOGS")
+        attID_ev_fn = skCase.getAttributeType("TSK_EVTX_FILE_NAME")
+        attID_ev_rc = skCase.getAttributeType("TSK_EVTX_RECOVERED_RECORD")			 
+        attID_ev_cn = skCase.getAttributeType("TSK_EVTX_COMPUTER_NAME")			 
+        attID_ev_ei = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER")
+        attID_ev_eiq = skCase.getAttributeType("TSK_EVTX_EVENT_IDENTIFIER_QUALIFERS")
+        attID_ev_el = skCase.getAttributeType("TSK_EVTX_EVENT_LEVEL")
+        attID_ev_oif = skCase.getAttributeType("TSK_EVTX_OFFSET_IN_FILE")
+        attID_ev_id = skCase.getAttributeType("TSK_EVTX_IDENTIFIER")
+        attID_ev_sn = skCase.getAttributeType("TSK_EVTX_SOURCE_NAME")
+        attID_ev_usi = skCase.getAttributeType("TSK_EVTX_USER_SECURITY_ID")
+        attID_ev_et = skCase.getAttributeType("TSK_EVTX_EVENT_TIME")
+        attID_ev_ete = skCase.getAttributeType("TSK_EVTX_EVENT_TIME_EPOCH")
+        attID_ev_dt = skCase.getAttributeType("TSK_EVTX_EVENT_DETAIL_TEXT")
+        attID_ev_cnt = skCase.getAttributeType("TSK_EVTX_EVENT_ID_COUNT")
+        
+        # we don't know how much work there is yet
+        progressBar.switchToIndeterminate()
+         
+        numFiles = len(files)
+        self.log(Level.INFO, "found " + str(numFiles) + " files")
+        progressBar.switchToDeterminate(numFiles)
+        fileCount = 0;
+        
+        # Create Event Log directory in temp directory, if it exists then continue on processing		
+        Temp_Dir = Case.getCurrentCase().getTempDirectory()
+        self.log(Level.INFO, "create Directory " + Temp_Dir)
+        temp_dir = os.path.join(Temp_Dir, "EvtxLogs")
+        try:
+            os.mkdir(temp_dir)
+        except:
+            self.log(Level.INFO, "Event Log Directory already exists " + temp_dir)
+            
+        # Write out each Event Log file to the temp directory
+        for file in files:
+            
+            # Check if the user pressed cancel while we were busy
+            if self.context.isJobCancelled():
+                return IngestModule.ProcessResult.OK
 
-            self.log(Level.INFO, "Found a text file: " + file.getName())
-            self.filesFound+=1
+            #self.log(Level.INFO, "Processing file: " + file.getName())
+            fileCount += 1
 
-            # Make an artifact on the blackboard.  TSK_INTERESTING_FILE_HIT is a generic type of
-            # artifact.  Refer to the developer docs for other examples.
-            art = file.newArtifact(BlackboardArtifact.ARTIFACT_TYPE.TSK_INTERESTING_FILE_HIT)
-            att = BlackboardAttribute(BlackboardAttribute.ATTRIBUTE_TYPE.TSK_SET_NAME.getTypeID(), 
-                  SampleJythonFileIngestModuleFactory.moduleName, "EVTX Logs")
-            art.addAttribute(att)
-  
-            # Fire an event to notify the UI and others that there is a new artifact  
-            IngestServices.getInstance().fireModuleDataEvent(
-                ModuleDataEvent(SampleJythonFileIngestModuleFactory.moduleName, 
-                    BlackboardArtifact.ARTIFACT_TYPE.TSK_INTERESTING_FILE_HIT, None));
+            # Save the DB locally in the temp folder. use file id as name to reduce collisions
+            Result_Path = os.path.join(temp_dir, file.getName())
+            ContentUtils.writeToFile(file, File(Result_Path))
+                        
+        # Run the EXE, saving output to a sqlite database
+        self.log(Level.INFO, "Running program on data source " + self.path_to_exe + " parm 1 == " + temp_dir + "  Parm 2 == " + os.path.join(temp_dir, "EventLogs.db3"))
+        subprocess.Popen([self.path_to_exe, temp_dir, os.path.join(Temp_Dir, "Analysis_Results.csv")]).communicate()[0]   
+            
+        # Set the database to be read to the one created by our program
+        Result_Path = os.path.join(Case.getCurrentCase().getTempDirectory(), "Analysis_Results.csv")
+        self.log(Level.INFO, "Path to the Eventlogs database file created == " + Result_Path)
+        
+                        
+        # Read the Output file from EXE
+        # Cycle through each row and create artifacts
+        reader = csv.DictReader(open(self.path_to_exe))
+        for row in reader:
+            Computer_Name = str(row["Computer_Name"])
+            Event_Identifier = str(row["Event_Identifier"])
+            Event_Level = str(row["Event_Level"])
+            Event_Source_Name = str(row["Event_Source_Name"]) 
+            Event_User_Security_Identifier = str(row["Event_User_Security_Identifier"])                
+            Event_Time = str(row["Event_Time"])
+            Event_Detail_Text = str(row["Event_Detail_Text"]) 
 
-            # For the example (this wouldn't be needed normally), we'll query the blackboard for data that was added
-            # by other modules. We then iterate over its attributes.  We'll just print them, but you would probably
-            # want to do something with them. 
-            artifactList = file.getArtifacts(BlackboardArtifact.ARTIFACT_TYPE.TSK_INTERESTING_FILE_HIT)
-            for artifact in artifactList:
-                attributeList = artifact.getAttributes();
-                for attrib in attributeList:
-                    self.log(Level.INFO, attrib.toString())
 
-            # To further the example, this code will read the contents of the file and count the number of bytes
-            inputStream = ReadContentInputStream(file)
-            buffer = jarray.zeros(1024, "b")
-            totLen = 0
-            len = inputStream.read(buffer)
-            while (len != -1):
-                    totLen = totLen + len
-                    len = inputStream.read(buffer)
+        # Make an artifact on the blackboard, TSK_PROG_RUN and give it attributes for each of the fields
+        # Make artifact for IOC_EVTX_LOGS
+        art = file.newArtifact(artID_evtx_ioc_details)
+
+        art.addAttributes(((BlackboardAttribute(attID_ev_cn, EvtxIOCAnalysisIngestModuleFactory.moduleName, Computer_Name)), \
+                            (BlackboardAttribute(attID_ev_ei, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Identifier)), \
+                            (BlackboardAttribute(attID_ev_el, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Level)), \
+                            (BlackboardAttribute(attID_ev_sn, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Source_Name)), \
+                            (BlackboardAttribute(attID_ev_usi, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_User_Security_Identifier)), \
+                            (BlackboardAttribute(attID_ev_et, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Time)), \
+                            (BlackboardAttribute(attID_ev_dt, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Detail_Text))))
+      
+        reader2 = csv.DictReader(open(self.path_to_exe))
+        for row in reader2:
+            #File_Name  = resultSet.getString("File_Name")
+            #Recovered_Record = resultSet.getString("Recovered_Record")
+            IOC_Rule_Name = str(row["EVTX Name"])
+            No_of_Event = str(row["No_of_Evt"])
+        
+
+        # Make an artifact on the blackboard, TSK_PROG_RUN and give it attributes for each of the fields
+        # Make artifact for SUM_IOC_EVTX_LOGS
+        art = file.newArtifact(artID_evtx_ioc_summary)
+
+        art.addAttributes(((BlackboardAttribute(attID_ioc_rule_name, EvtxIOCAnalysisIngestModuleFactory.moduleName, IOC_Rule_Name)), \
+                            (BlackboardAttribute(attID_no_of_evt, EvtxIOCAnalysisIngestModuleFactory.moduleName, No_of_Event))))
+        
+        # Fire an event to notify the UI and others that there are new artifacts  
+        IngestServices.getInstance().fireModuleDataEvent(
+            ModuleDataEvent(EvtxIOCAnalysisIngestModuleFactory.moduleName, artID_sum_ioc_evtx_evt, None))
+        IngestServices.getInstance().fireModuleDataEvent(
+            ModuleDataEvent(EvtxIOCAnalysisIngestModuleFactory.moduleName, artID_ioc_evtx_evt, None))
 
         return IngestModule.ProcessResult.OK
-
-    # Where any shutdown code is run and resources are freed.
-    # TODO: Add any shutdown code that you need here.
     def shutDown(self):
         #self.filen.close()
         # Sends a message to the ingest inbox(top left corner) with the number of files found (in this thread)
-        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " Shutting down" )
+        message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, EvtxIOCAnalysisIngestModuleFactory.moduleName, " Shutting down" )
         ingestServices = IngestServices.getInstance().postMessage(message)
         
 
