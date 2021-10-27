@@ -106,7 +106,7 @@ class SampleJythonFileIngestModule(FileIngestModule):
         #reader = csv.reader(open(self.path_to_exe))
         reader = csv.DictReader(open(self.path_to_exe))
         for raw in reader:
-            self.log(Level.INFO, str(raw))
+            self.log(Level.INFO, str(raw["EVTX Name"]))
 
         message = IngestMessage.createMessage(IngestMessage.MessageType.DATA, SampleJythonFileIngestModuleFactory.moduleName, " asdsad" )
         ingestServices = IngestServices.getInstance().postMessage(message)
