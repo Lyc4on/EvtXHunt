@@ -144,16 +144,16 @@ class EvtxIOCAnalysisIngestModule(FileIngestModule):
         skCase_Tran = skCase.beginTransaction()
         try:
             self.log(Level.INFO, "Creation of New Artifacts")
-            artID_evtx_ioc_summary = skCase.addArtifactType( "SUM_IOC_EVTX_LOGS", "IOCs Summary in Windows Event Logs")
+            artID_sum_ioc_evtx = skCase.addArtifactType( "SUM_IOC_EVTX_LOGS", "IOCs Summary in Windows Event Logs")
         except:		
             self.log(Level.INFO, "Error in Artifacts Creation, some artifacts may be missing.")
-            artID_evtx_ioc_summary = skCase.getArtifactTypeID("SUM_IOC_EVTX_LOGS")
+            artID_sum_ioc_evtx = skCase.getArtifactTypeID("SUM_IOC_EVTX_LOGS")
         try:
             self.log(Level.INFO, "Creation of New Artifacts")
-            artID_evtx_ioc_details = skCase.addArtifactType( "IOC_EVTX_LOGS", "Detailed Windows Event Logs")
+            artID_ioc_evtx = skCase.addArtifactType( "IOC_EVTX_LOGS", "Detailed Windows Event Logs")
         except:		
             self.log(Level.INFO, "Error in Artifacts Creation, some artifacts may be missing.")            
-            artID_evtx_ioc_details = skCase.getArtifactTypeID("IOC_EVTX_LOGS")
+            artID_ioc_evtx = skCase.getArtifactTypeID("IOC_EVTX_LOGS")
 
         try:
             attID_ev_fn = skCase.addArtifactAttributeType("EVTX_FILE_NAME", BlackboardAttribute.TSK_BLACKBOARD_ATTRIBUTE_VALUE_TYPE.STRING, "Event Log File Name")
@@ -289,7 +289,7 @@ class EvtxIOCAnalysisIngestModule(FileIngestModule):
 
         # Make an artifact on the blackboard, TSK_PROG_RUN and give it attributes for each of the fields
         # Make artifact for IOC_EVTX_LOGS
-        art = file.newArtifact(artID_evtx_ioc_details)
+        art = file.newArtifact(artID_ioc_evtx)
 
         art.addAttributes(((BlackboardAttribute(attID_ev_cn, EvtxIOCAnalysisIngestModuleFactory.moduleName, Computer_Name)), \
                             (BlackboardAttribute(attID_ev_ei, EvtxIOCAnalysisIngestModuleFactory.moduleName, Event_Identifier)), \
@@ -309,7 +309,7 @@ class EvtxIOCAnalysisIngestModule(FileIngestModule):
 
         # Make an artifact on the blackboard, TSK_PROG_RUN and give it attributes for each of the fields
         # Make artifact for SUM_IOC_EVTX_LOGS
-        art = file.newArtifact(artID_evtx_ioc_summary)
+        art = file.newArtifact(artID_sum_ioc_evtx)
 
         art.addAttributes(((BlackboardAttribute(attID_ioc_rule_name, EvtxIOCAnalysisIngestModuleFactory.moduleName, IOC_Rule_Name)), \
                             (BlackboardAttribute(attID_no_of_evt, EvtxIOCAnalysisIngestModuleFactory.moduleName, No_of_Event))))
