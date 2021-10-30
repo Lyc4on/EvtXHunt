@@ -1,0 +1,15 @@
+,Title,Description,Count
+0,EfsPotato Named Pipe - C2F18FA5,Detects the pattern of a pipe name as used by the tool EfsPotato,6
+1,PsExec Tool Execution - 224C0481,Detects PsExec service installation and execution events (service and Sysmon),3
+2,CVE-2021-1675 Print Spooler Exploitation Filename Pattern - 59781AE6,Detects the default filename used in PoC code against print spooler vulnerability CVE-2021-1675,14
+3,WMI Event Subscription - 76D7312E,Detects creation of WMI event subscription persistence method,8
+4,Suspicious In-Memory Module Execution - 8B78C085,"Detects the access to processes by other suspicious processes which have reflectively loaded libraries in their memory space. An example is SilentTrinity C2 behaviour. Generally speaking, when Sysmon EventID 10 cannot reference a stack call to a dll loaded from disk (the standard way), it will display ""UNKNOWN"" as the module name. Usually this means the stack call points to a module that was reflectively loaded in memory. Adding to this, it is not common to see such few calls in the stack (ntdll.dll --> kernelbase.dll --> unknown) which essentially means that most of the functions required by the process to execute certain routines are already present in memory, not requiring any calls to external libraries. The latter should also be considered suspicious.",8
+5,Accessing WinAPI in PowerShell. Code Injection. - 58AA62BD,Detecting Code injection with PowerShell in another process,4
+6,Suspicious Remote Thread Created - 5C4FD135,"Offensive tradecraft is switching away from using APIs like ""CreateRemoteThread"", however, this is still largely observed in the wild. This rule aims to detect suspicious processes (those we would not expect to behave in this way like word.exe or outlook.exe) creating remote threads on other processes. It is a generalistic rule, but it should have a low FP ratio due to the selected range of processes.",13
+7,Suspicious Driver Load from Temp - E5AE3A7A,Detects a driver load from a temporary directory,2
+8,Security Event Log Cleared - D92C2D97,Checks for event id 1102 which indicates the security event log was cleared.,5
+9,Successful Overpass the Hash Attempt - 6C674B37,Detects successful logon with logon type 9 (NewCredentials) which matches the Overpass the Hash behavior of e.g Mimikatz's sekurlsa::pth module.,2
+10,Eventlog Cleared - 0A7C602D,"One of the Windows Eventlogs has been cleared. e.g. caused by ""wevtutil cl"" command execution",5
+11,User Added to Local Administrators - 5B23AA4B,"This rule triggers on user accounts that are added to the local Administrators group, which could be legitimate activity or a sign of privilege escalation activity",2
+12,Possible DC Shadow - 54CA1F49,Detects DCShadow via create new SPN,2
+13,Remote PowerShell Session - C0BA85F0,Detects remote PowerShell connections by monitoring network outbound connections to ports 5985 or 5986 from a non-network service account.,2
