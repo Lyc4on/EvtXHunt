@@ -8,12 +8,17 @@ Has to be complied in Windows environment.
 pip install -r requirements.txt
 ```
 
-Compile commands (to be refined)
+Compile into exe (to be refined)
 ```cmd
-pyinstaller --onefile -w evtxIOC_prototypev3.py
+pyinstaller evtxIOC_prototypev5_sigma.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
 ```
 
-Test out .exe (to be refined)
+Run python script (to be refined)
 ```cmd
-python evtxIOC_prototypev4_sigma.py -f EfsPotato_sysmon_17_18_privesc_seimpersonate_to_system.evtx -r rules
+python evtxIOC_prototypev5_sigma.py -f evtx_samples -r rules\\rules_windows_generic.json
+```
+
+Run exe (to be refined)
+```cmd
+evtxIOC_prototypev5_sigma.exe -f evtx_samples -r rules\\rules_windows_generic.json
 ```
