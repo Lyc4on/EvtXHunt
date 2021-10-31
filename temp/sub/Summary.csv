@@ -1,0 +1,3 @@
+,Title,Description,Count
+0,WMI Event Subscription - 76D7312E,Detects creation of WMI event subscription persistence method,8
+1,Suspicious Remote Thread Created - 5C4FD135,"Offensive tradecraft is switching away from using APIs like ""CreateRemoteThread"", however, this is still largely observed in the wild. This rule aims to detect suspicious processes (those we would not expect to behave in this way like word.exe or outlook.exe) creating remote threads on other processes. It is a generalistic rule, but it should have a low FP ratio due to the selected range of processes.",2

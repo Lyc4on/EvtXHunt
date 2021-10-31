@@ -92,11 +92,11 @@ if __name__ == "__main__":
 	# path = cwd + "\\analysisCSV"
 	path = cwd + "\\" + args.output
 	if not os.path.exists(path):
-		os.mkdir(path)
+		os.makedirs(path)
 
     	# Create analysisCSV folder in current working directory if it does not exists
-	if os.path.isdir(path) == False:
-		os.mkdir(path)
+	# if os.path.isdir(path) == False:
+	# 	os.mkdir(path)
 
     	# Create dataframe to store a summary of the analysis
 	analysisDF = pd.DataFrame()

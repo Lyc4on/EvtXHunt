@@ -15,10 +15,10 @@ pyinstaller evtxIOC_prototypev5_sigma.py -F --hidden-import="pyevtx" --hidden-im
 
 Run python script (to be refined)
 ```cmd
-python evtxIOC_prototypev5_sigma.py -f evtx_samples -r rules\\rules_windows_generic.json
+python evtxIOC_prototypev5_sigma.py -f evtx_samples -r rules\\rules_windows_generic.json -o temp\\sub
 ```
 
 Run exe (to be refined)
 ```cmd
-evtxIOC_prototypev5_sigma.exe -f evtx_samples -r rules\\rules_windows_generic.json
+evtxIOC_prototypev5_sigma.exe -f evtx_samples -r rules\\rules_windows_generic.json -o temp\\sub
 ```

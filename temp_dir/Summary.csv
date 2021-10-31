@@ -1,7 +1,0 @@
-,Title,Description,Count
-0,WMI Event Subscription - 76D7312E,Detects creation of WMI event subscription persistence method,8
-1,Suspicious Remote Thread Created - 5C4FD135,"Offensive tradecraft is switching away from using APIs like ""CreateRemoteThread"", however, this is still largely observed in the wild. This rule aims to detect suspicious processes (those we would not expect to behave in this way like word.exe or outlook.exe) creating remote threads on other processes. It is a generalistic rule, but it should have a low FP ratio due to the selected range of processes.",2
-2,Security Event Log Cleared - D92C2D97,Checks for event id 1102 which indicates the security event log was cleared.,2
-3,Eventlog Cleared - 0A7C602D,"One of the Windows Eventlogs has been cleared. e.g. caused by ""wevtutil cl"" command execution",2
-4,User Added to Local Administrators - 5B23AA4B,"This rule triggers on user accounts that are added to the local Administrators group, which could be legitimate activity or a sign of privilege escalation activity",2
-5,Possible DC Shadow - 54CA1F49,Detects DCShadow via create new SPN,2
