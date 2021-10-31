@@ -322,10 +322,10 @@ class EvtxIOCAnalysisIngestModule(DataSourceIngestModule):
             # except Exception as e:
             #      #self.log(Level.INFO, "Error in adding")
             #     self.log(Level.INFO, e)
-            # try:
-            skCase.postArtifact(art, EvtxIOCAnalysisIngestModuleFactory.moduleName)
-            # except:
-            #     self.log(Level.INFO, "Error posting artifact")
+            try:
+                skCase.postArtifact(art, EvtxIOCAnalysisIngestModuleFactory.moduleName)
+            except:
+                self.log(Level.INFO, "Error posting artifact")
 
         
     
