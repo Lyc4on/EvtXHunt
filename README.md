@@ -10,15 +10,15 @@ pip install -r requirements.txt
 
 Compile into exe (to be refined)
 ```cmd
-pyinstaller evtxIOC_prototypev5_sigma.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
+pyinstaller evtxIOC_prototypev6_sigma.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
 ```
 
 Run python script (to be refined)
 ```cmd
-python evtxIOC_prototypev5_sigma.py -f evtx_samples -r rules\\rules_windows_generic.json -o temp\\sub
+python evtxIOC_prototypev6_sigma.py -f evtx_samples -r rules\\rules_windows_generic.json -o C:\Users\nic\Desktop\SIT_Local\evtxIOC\temp\sub
 ```
 
 Run exe (to be refined)
 ```cmd
-evtxIOC_prototypev5_sigma.exe -f evtx_samples -r rules\\rules_windows_generic.json -o temp\\sub
+evtxIOC_prototypev6_sigma.exe -f evtx_samples -r rules\\rules_windows_generic.json -o C:\Users\nic\Desktop\SIT_Local\evtxIOC\temp\sub
 ```
