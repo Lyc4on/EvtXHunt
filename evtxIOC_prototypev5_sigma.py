@@ -19,6 +19,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description=help_msg, formatter_class=argparse.RawTextHelpFormatter)
 	parser.add_argument('-f', '--file', type=str, required=True, help="evtx_Folder")
 	parser.add_argument('-r', '--rule', type=str, required=True, help="JSON file containing rules")
+	parser.add_argument('-o', '--output', type=str, required=True, help="output directory")
 	args = parser.parse_args()
     	# Setup of Evtx Dataframe columns : may want to include filepath of event entry to faciliate easier tracking of flagged out IOC
 	logs = pd.DataFrame()
@@ -88,7 +89,11 @@ if __name__ == "__main__":
     	# Get current working directory
 	cwd = os.getcwd()
     	# Append /analysisCSV to current working directory
-	path = cwd + "\\analysisCSV"
+	# path = cwd + "\\analysisCSV"
+	path = cwd + "\\" + args.output
+	if not os.path.exists(path):
+		os.mkdir(path)
+
     	# Create analysisCSV folder in current working directory if it does not exists
 	if os.path.isdir(path) == False:
 		os.mkdir(path)

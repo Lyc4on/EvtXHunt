@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['evtxIOC_prototypev5_sigma.py'],
-             pathex=['C:\\Users\\dream\\Documents\\GitHub\\evtxIOC'],
+             pathex=['C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC'],
              binaries=[],
              datas=[],
              hiddenimports=['pyevtx', 'yaml', 'sqlalchemy.sql.default_comparator'],
