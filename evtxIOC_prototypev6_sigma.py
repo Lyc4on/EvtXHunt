@@ -124,6 +124,8 @@ if __name__ == "__main__":
 			}
 			# Perform SQL query of each rule on evtxDF
 			output = sqldf(query,locals())
+			output['SIGMA Rule'] = data[i]['title']
+			output['SIGMA Description'] = data[i]['description']
 			# For each rule that has 1 or more matches, we will create a CSV file containing the relevant log entries 
 			if len(output) > 1:
 				print(data[i]['title']+": " + str(len(output)) + " matches")
