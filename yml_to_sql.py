@@ -103,9 +103,14 @@ if __name__ == "__main__":
                 # print(type(rule['detection']['selection']))
                 # print(rule['detection']['selection'])
                 d = rule['detection']
-                query_row = json_normalize(d, sep='_')
-                query_row = query_row.to_dict(orient='records')[0]
-                print(query_row)
+                
+                if 'selection' not in d:
+                    # query_row = json_normalize(d, sep='_')
+                    # query_row = query_row.to_dict(orient='records')[0]
+                    # print(query_row.keys())
+                    print(path + '\\' + file)
+                    print(d.keys())
+                    print('\n')
 
                 # if rule['detection'].keys() not in dist_keys:
                 #     dist_keys.append(rule['detection'].keys())
