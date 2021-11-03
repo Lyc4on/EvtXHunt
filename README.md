@@ -25,7 +25,7 @@ Select EVTX IOC Hunter and click Finish as follows:
 Analysis result can be found under the **Data Artifacts** as follows:
 ![autopsy_05](Images/autopsy_05.png)
 
-
+---
 ### CommandLine Usage
 #### Installation
 
@@ -52,7 +52,7 @@ python evtxIOCHunter_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Deskt
 evtxIOCHunter_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 ```
 
-## Creating SQL Query .json rules from SIGMA .yml files
+### Creating SQL Query .json rules from SIGMA .yml files
 
 Use the **sigmac** binary to facilite the conversion of .yml rules into .json rules containing the respective SQL query statement.
 
@@ -75,7 +75,7 @@ sigmac -I -t sqlite -c config/generic/sysmon.yml -r ../rules/windows/ -oF json -
 sigmac -I -t sqlite -c config/generic/sysmon.yml ../rules/windows/create_remote_thread/sysmon_suspicious_remote_thread.yml -oF json -o single.json -of title,description
 ```
 
-### Adding new .json rules to tool library
+#### Adding new .json rules to tool library
 All .json rules has to be placed in the rules folder.
 
 ## References
