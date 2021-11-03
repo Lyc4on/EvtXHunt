@@ -1,6 +1,6 @@
-# evtxIOCHunter by F34R 0f FOR3N5ICS
+# EvtXHunt by F34R 0f FOR3N5ICS
 ## Introduction
-evtxIOCHunter is mainly an Autopsy plugin that is able to analyse EVTX artifacts against a library of SIGMA rules. evtxIOCHunter can also function as a commandline interface tool to serve the same purpose of analysing EVTX files against a set of SIGMA rules.
+EvtXHunt is mainly an Autopsy plugin that is able to analyse EVTX artifacts against a library of SIGMA rules. EvtXHunt can also function as a commandline interface tool to serve the same purpose of analysing EVTX files against a set of SIGMA rules.
 
 ## Requirements
 - Python 2.7x
@@ -35,21 +35,21 @@ pip install -r requirements.txt
 ```
 
 #### Compiling Python EXE
-Note that this has to be done in a Windows environment. A copy of the compiled EXE binary can be found in the repository root path named **evtxIOCHunter_python.py**.
+Note that this has to be done in a Windows environment. A copy of the compiled EXE binary can be found in the repository root path named **EvtXHunt_python.py**.
 
 ```bash
-pyinstaller evtxIOCHunter_python.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
+pyinstaller EvtXHunt_python.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
 ```
 
 #### Running Command-Line Tool
-The command-line tool can be runned using either **evtxIOCHunter_python.py** or **evtxIOCHunter_python.exe**
+The command-line tool can be runned using either **EvtXHunt_python.py** or **EvtXHunt_python.exe**
 ```bash
 # -f : relative path of folder containing EVTX files
 # -r : relative path of folder containining .JSON rules
 # -o : absolute path to output .csv analysis
-python evtxIOCHunter_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
+python EvtXHunt_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 
-evtxIOCHunter_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
+EvtXHunt_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 ```
 
 ---
