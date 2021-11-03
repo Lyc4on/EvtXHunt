@@ -52,6 +52,8 @@ python evtxIOCHunter_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Deskt
 evtxIOCHunter_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 ```
 
+---
+
 ### Creating SQL Query .json rules from SIGMA .yml files
 
 Use the **sigmac** binary to facilite the conversion of .yml rules into .json rules containing the respective SQL query statement.
