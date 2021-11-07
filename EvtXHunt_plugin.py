@@ -66,7 +66,7 @@ class EvtXHuntAnalysisIngestModule(DataSourceIngestModule):
         self.context = context
         #check if platform is windows and set the exe path and rule path
         if PlatformUtil.isWindowsOS():
-            self.path_to_exe = os.path.join(os.path.dirname(os.path.abspath(__file__)), "EvtXHunt_python.exe")
+            self.path_to_exe = os.path.join(os.path.dirname(os.path.abspath(__file__)), "EvtXHunt.exe")
             if not os.path.exists(self.path_to_exe): raise IngestModuleException("Windows EXE File does not exists")
             self.path_to_rulefile = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rules")
         pass
