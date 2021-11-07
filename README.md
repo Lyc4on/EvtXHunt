@@ -1,6 +1,6 @@
 # EvtXHunt by F34R 0f FOR3N5ICS
 ## Introduction
-EvtXHunt is mainly an Autopsy plugin that is able to analyse EVTX artifacts against a library of SIGMA rules. EvtXHunt can also function as a commandline interface tool to serve the same purpose of analysing EVTX files against a set of SIGMA rules.
+EvtXHunt is mainly an Autopsy plugin that is able to analyse windows EVTX logs against a library of SIGMA rules. EvtXHunt can also function as a commandline interface tool to serve the same purpose of analysing EVTX files against a set of SIGMA rules.
 
 ## Requirements
 - Python 2.7x
