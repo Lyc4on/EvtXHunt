@@ -47,9 +47,9 @@ The command-line tool can be runned using either **EvtXHunt.py** or **EvtXHunt.e
 # -f : relative path of folder containing EVTX files
 # -r : relative path of folder containining .JSON rules
 # -o : absolute path to output .csv analysis
-python EvtXHunt_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
-
 python EvtXHunt.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
+
+EvtXHunt.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 ```
 
 ---
