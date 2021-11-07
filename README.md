@@ -35,21 +35,21 @@ pip install -r requirements.txt
 ```
 
 #### Compiling Python EXE
-Note that this has to be done in a Windows environment. A copy of the compiled EXE binary can be found in the repository root path named **EvtXHunt_python.py**.
+Note that this has to be done in a Windows environment. A copy of the compiled EXE binary can be found in the repository root path named **EvtXHunt.py**.
 
 ```bash
-pyinstaller EvtXHunt_python.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
+pyinstaller EvtXHunt.py -F --hidden-import="pyevtx" --hidden-import="yaml" --hidden-import="sqlalchemy.sql.default_comparator"
 ```
 
 #### Running Command-Line Tool
-The command-line tool can be runned using either **EvtXHunt_python.py** or **EvtXHunt_python.exe**
+The command-line tool can be runned using either **EvtXHunt.py** or **EvtXHunt.exe**
 ```bash
 # -f : relative path of folder containing EVTX files
 # -r : relative path of folder containining .JSON rules
 # -o : absolute path to output .csv analysis
 python EvtXHunt_python.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 
-EvtXHunt_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
+python EvtXHunt.py -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Local\\evtxIOC\\temp\\sub
 ```
 
 ---
