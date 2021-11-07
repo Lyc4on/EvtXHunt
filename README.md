@@ -19,7 +19,7 @@ Copy the repository into Autopsy plugin folder as follows:
 Run ingest module as follows:
 ![autopsy_03](Images/autopsy_03.png)
 
-Select EVTX IOC Hunter and click Finish as follows:
+Select EvtXHunt and click Finish as follows:
 ![autopsy_04](Images/autopsy_04.png)
 
 Analysis result can be found under the **Data Artifacts** as follows:
@@ -30,7 +30,7 @@ Analysis result can be found under the **Data Artifacts** as follows:
 #### Installation
 
 ```bash
-git clone git@github.com:Lyc4on/evtxIOC.git
+git clone git@github.com:Lyc4on/EvtXHunt.git
 pip install -r requirements.txt
 ```
 
