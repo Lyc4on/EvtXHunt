@@ -59,7 +59,7 @@ EvtXHunt_python.exe -f evtx_samples -r rules -o C:\\Users\\nic\\Desktop\\SIT_Loc
 Use the **sigmac** binary to facilite the conversion of .yml rules into .json rules containing the respective SQL query statement.
 
 ```bash
-git clone https://github.com/SigmaHQ/sigmac
+git clone https://github.com/SigmaHQ/sigma.git
 cd tools
 python setup.py install # setup necessary requirements in python environment
 
